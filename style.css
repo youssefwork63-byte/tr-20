@@ -1,0 +1,117 @@
+:root {
+  --bg-black: #0f1115;
+  --bg-dark: #171a21;
+  --text: #e6e6e6;
+  --muted: #9aa0a6;
+  --primary: #4f7cff;
+  --danger: #ff4757;
+  --success: #22c55e;
+  --warning: #f59e0b;
+}
+
+html, body {
+  background-color: var(--bg-dark);
+  color: var(--text);
+}
+
+.bg-black {
+  background-color: var(--bg-black) !important;
+}
+
+.navbar {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.card-title {
+  color: var(--text);
+}
+
+.form-control-dark {
+  background-color: #12151b;
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.09);
+}
+.form-control-dark::placeholder {
+  color: #666b73;
+}
+.form-control-dark:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(79,124,255,0.15);
+}
+
+/* الدوائر الإحصائية */
+.stat-circle {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: radial-gradient(100px circle at 50% 40%, #1b1f29, #12151b);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.stat-circle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+}
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+.stat-label {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* جدول داكن */
+.table-dark {
+  background-color: #12151b;
+}
+.table-dark.table-hover tbody tr:hover {
+  background-color: #171a21;
+}
+.thead-dark th {
+  background-color: #0f1115;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* شارات الحالة */
+.badge-paid {
+  background-color: rgba(34,197,94,0.15);
+  color: var(--success);
+  border: 1px solid rgba(34,197,94,0.35);
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+.badge-unpaid {
+  background-color: rgba(245,158,11,0.15);
+  color: var(--warning);
+  border: 1px solid rgba(245,158,11,0.35);
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+/* أزرار الإجراءات */
+.btn-icon {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  margin: 0 4px;
+}
+
+@media (max-width: 576px) {
+  .stat-circle {
+    width: 140px;
+    height: 140px;
+  }
+  .stat-value {
+    font-size: 1.3rem;
+  }
+}

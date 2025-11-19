@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>سجل تحويل الرصيد</title>
+  <!-- Bootstrap 4.6 RTL-friendly -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-dark text-light">
+
+  <nav class="navbar navbar-dark bg-black">
+    <div class="container">
+      <span class="navbar-brand mb-0 h1">سجل تحويل الرصيد</span>
+    </div>
+  </nav>
+
+  <main class="container py-4">
+
+    <!-- الإحصائيات العلوية -->
+    <section class="mb-4">
+      <div class="row text-center">
+        <div class="col-12 col-md-4 mb-3">
+          <div class="stat-circle">
+            <div class="stat-value" id="totalTopUp">0</div>
+            <div class="stat-label">إجمالي التعبئة</div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4 mb-3">
+          <div class="stat-circle">
+            <div class="stat-value" id="totalProfit">0</div>
+            <div class="stat-label">إجمالي الربح</div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4 mb-3">
+          <div class="stat-circle">
+            <div class="stat-value" id="paidCounts">0 | 0</div>
+            <div class="stat-label">مدفوع | غير مدفوع</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- نموذج الإضافة -->
+    <section class="card bg-black border-0 mb-4 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">إضافة عملية تحويل</h5>
+        <form id="addForm" novalidate>
+          <div class="form-row">
+            <div class="form-group col-12 col-md-4">
+              <label for="name">اسم الشخص</label>
+              <input type="text" class="form-control form-control-dark" id="name" placeholder="مثال: أحمد" required>
+            </div>
+            <div class="form-group col-6 col-md-2">
+              <label for="amount">المبلغ المحوَّل</label>
+              <input type="number" class="form-control form-control-dark" id="amount" placeholder="مثال: 10000" min="0" step="1" required>
+            </div>
+            <div class="form-group col-6 col-md-2">
+              <label for="price">سعر المبلغ</label>
+              <input type="number" class="form-control form-control-dark" id="price" placeholder="مثال: 12000" min="0" step="1" required>
+            </div>
+            <div class="form-group col-6 col-md-2">
+              <label for="date">التاريخ</label>
+              <input type="date" class="form-control form-control-dark" id="date" required>
+            </div>
+            <div class="form-group col-6 col-md-2">
+              <label for="paid">الحالة</label>
+              <select id="paid" class="form-control form-control-dark">
+                <option value="true">مدفوع</option>
+                <option value="false" selected>غير مدفوع</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">إضافة للسجل</button>
+          <button type="button" id="clearAll" class="btn btn-outline-danger ml-2">حذف كل السجلات</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- جدول السجلات -->
+    <section class="card bg-black border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <h5 class="card-title mb-0">السجلات</h5>
+          <div class="ml-auto d-flex">
+            <input type="text" id="searchInput" class="form-control form-control-dark mr-2" placeholder="بحث بالاسم...">
+            <select id="filterPaid" class="form-control form-control-dark">
+              <option value="all" selected>الكل</option>
+              <option value="paid">مدفوع</option>
+              <option value="unpaid">غير مدفوع</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-dark table-striped table-hover table-sm mb-0">
+            <thead class="thead-dark">
+              <tr>
+                <th>#</th>
+                <th>الاسم</th>
+                <th>المبلغ</th>
+                <th>السعر</th>
+                <th>التاريخ</th>
+                <th>الحالة</th>
+                <th>الربح</th>
+                <th class="text-center">إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="recordsBody">
+              <!-- يُملأ تلقائيًا -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- نافذة تعديل -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-black text-light">
+        <div class="modal-header border-secondary">
+          <h6 class="modal-title">تعديل السجل</h6>
+          <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="editForm">
+          <div class="modal-body">
+            <input type="hidden" id="editId">
+            <div class="form-row">
+              <div class="form-group col-12">
+                <label for="editName">اسم الشخص</label>
+                <input type="text" class="form-control form-control-dark" id="editName" required>
+              </div>
+              <div class="form-group col-6">
+                <label for="editAmount">المبلغ المحوَّل</label>
+                <input type="number" class="form-control form-control-dark" id="editAmount" min="0" step="1" required>
+              </div>
+              <div class="form-group col-6">
+                <label for="editPrice">سعر المبلغ</label>
+                <input type="number" class="form-control form-control-dark" id="editPrice" min="0" step="1" required>
+              </div>
+              <div class="form-group col-6">
+                <label for="editDate">التاريخ</label>
+                <input type="date" class="form-control form-control-dark" id="editDate" required>
+              </div>
+              <div class="form-group col-6">
+                <label for="editPaid">الحالة</label>
+                <select id="editPaid" class="form-control form-control-dark">
+                  <option value="true">مدفوع</option>
+                  <option value="false">غير مدفوع</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer border-secondary">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
+            <button type="submit" class="btn btn-primary">حفظ التعديل</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
